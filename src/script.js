@@ -3,12 +3,12 @@ const descInput = document.getElementById("desc");
 const amountInput = document.getElementById("amount");
 const incomeBtn = document.getElementById("incomeBtn");
 const expenseBtn = document.getElementById("expenseBtn");
-const incomeList = document.getElementById("incomelist");
-const expenseList = document.getElementById("expenselist");
-const transactionList = document.getElementById("transactionlist");
+const incomeList = document.getElementById("incomeList");
+const expenseList = document.getElementById("expenseList");
+const transactionList = document.getElementById("transactionList");
 const balanceSpan = document.getElementById("balance");
 
-// Arrayer för inkomster, utgifter och transaktioner
+// Arrayer för inkomster, utgifter och alla transaktioner
 const incomes = [];
 const expenses = [];
 const transactions = [];
@@ -18,7 +18,7 @@ function addTransaction(type) {
   const description = descInput.value.trim();
   const amount = Number(amountInput.value);
 
-  // Inputvalidering
+  // Validering: beskrivning får ej vara tom, belopp måste vara positivt tal
   if (!description || isNaN(amount) || amount <= 0) {
     return;
   }
@@ -45,7 +45,7 @@ function addTransaction(type) {
 
 // Visa inkomster, utgifter och alla transaktioner i varsin lista
 function renderLists() {
-  // Lista för inkomster
+  // Inkomster
   incomeList.innerHTML = "";
   incomes.forEach((item) => {
     const li = document.createElement("li");
@@ -53,7 +53,7 @@ function renderLists() {
     incomeList.appendChild(li);
   });
 
-  // Lista för utgifter
+  // Utgifter
   expenseList.innerHTML = "";
   expenses.forEach((item) => {
     const li = document.createElement("li");
@@ -83,7 +83,7 @@ function updateBalance() {
 incomeBtn.addEventListener("click", () => addTransaction("income"));
 expenseBtn.addEventListener("click", () => addTransaction("expense"));
 
-// Export för tester (om testramverket kör node)
+// Export för tester (om testramverket kör 'node')
 if (typeof module !== "undefined") {
   module.exports = {
     incomes,
