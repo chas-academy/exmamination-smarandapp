@@ -1,4 +1,4 @@
-// Hämta alla HTML-element
+
 const descInput = document.getElementById("desc");
 const amountInput = document.getElementById("amount");
 const incomeBtn = document.getElementById("incomeBtn");
@@ -8,17 +8,15 @@ const expenseList = document.getElementById("expenseList");
 const transactionList = document.getElementById("transactionList");
 const balanceSpan = document.getElementById("balance");
 
-// Arrayer för inkomster och utgifter
+
 const incomes = [];
 const expenses = [];
 const transactions = [];
 
-// Lägg till transaktion
 function addTransaction(type) {
   const description = descInput.value.trim();
   const amount = Number(amountInput.value);
 
-  // Validering: inget tomt, bara positiva tal
   if (!description || isNaN(amount) || amount <= 0) {
     return;
   }
@@ -35,14 +33,12 @@ function addTransaction(type) {
   renderLists();
   updateBalance();
 
-  // Rensa input
   descInput.value = "";
   amountInput.value = "";
 }
 
-// Rendera listor
 function renderLists() {
-  // Inkomster
+  
   incomeList.innerHTML = "";
   incomes.forEach((item) => {
     const li = document.createElement("li");
@@ -50,7 +46,6 @@ function renderLists() {
     incomeList.appendChild(li);
   });
 
-  // Utgifter
   expenseList.innerHTML = "";
   expenses.forEach((item) => {
     const li = document.createElement("li");
@@ -58,7 +53,6 @@ function renderLists() {
     expenseList.appendChild(li);
   });
 
-  // Alla transaktioner
   transactionList.innerHTML = "";
   transactions.forEach((item) => {
     const li = document.createElement("li");
@@ -68,7 +62,7 @@ function renderLists() {
   });
 }
 
-// Uppdatera saldo
+
 function updateBalance() {
   let total = 0;
   incomes.forEach((item) => total += item.amount);
@@ -76,11 +70,10 @@ function updateBalance() {
   balanceSpan.textContent = total;
 }
 
-// Eventlyssnare
+
 incomeBtn.addEventListener("click", () => addTransaction("income"));
 expenseBtn.addEventListener("click", () => addTransaction("expense"));
 
-// Export för tester (om testramverk körs)
 if (typeof module !== "undefined") {
   module.exports = {
     incomes,
