@@ -24,16 +24,18 @@ function addTransaction(type) {
     return;
   }
 
+  // Skapa transaktionsobjekt
   const transaction = { description, amount, type };
 
+  // Lägg till i respektive lista
   transactions.push(transaction);
-
   if (type === "income") {
     incomes.push(transaction);
   } else {
     expenses.push(transaction);
   }
 
+  // Uppdatera listor och saldo
   renderLists();
   updateBalance();
 
@@ -42,7 +44,7 @@ function addTransaction(type) {
   amountInput.value = "";
 }
 
-// Visa inkomster, utgifter och alla transaktioner i varsitt lista
+// Visa inkomster, utgifter och alla transaktioner i varsin lista
 function renderLists() {
   // Lista för inkomster
   incomeList.innerHTML = "";
@@ -56,7 +58,7 @@ function renderLists() {
   expenseList.innerHTML = "";
   expenses.forEach(item => {
     const li = document.createElement("li");
-    li.textContent = `${item.description}: -${item.amount} kr`;
+    li.textContent = `${item.description}: ${item.amount} kr`;
     expenseList.appendChild(li);
   });
 
@@ -82,7 +84,7 @@ function updateBalance() {
 incomeBtn.addEventListener("click", () => addTransaction("income"));
 expenseBtn.addEventListener("click", () => addTransaction("expense"));
 
-// Export för tester (om testramverket kör `node`)
+// Export för tester (om test ramverket kör `node`)
 if (typeof module !== "undefined") {
   module.exports = {
     incomes,
@@ -90,6 +92,6 @@ if (typeof module !== "undefined") {
     transactions,
     addTransaction,
     updateBalance,
-    renderLists
+    renderLists,
   };
 }
