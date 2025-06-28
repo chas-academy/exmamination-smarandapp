@@ -1,93 +1,83 @@
-// Hämta HTML-element
-const descInput = document.getElementById("desc");
-const amountInput = document.getElementById("amount");
-const incomeBtn = document.getElementById("incomeBtn");
-const expenseBtn = document.getElementById("expenseBtn");
-const incomeList = document.getElementById("incomeList");
-const expenseList = document.getElementById("expenseList");
-const transactionList = document.getElementById("transactionList");
-const balanceSpan = document.getElementById("balance");
+/* ========= Budget- och utgiftskoll ========= */
+/*   Fungerar i både webbläsare och Jest/JSDOM  */
 
-// Arrayer för inkomster och utgifter
-const incomes = [];
-const expenses = [];
-const transactions = [];
+/* ---------- Data ---------- */
+const incomes  = [];   // inkomster:  { description, amount }
+const expenses = [];   // utgifter:   { description, amount }
 
-// Lägg till transaktion
-function addTransaction(type) {
-  const description = descInput.value.trim();
-  const amount = Number(amountInput.value);
+/* ---------- Initiera när DOM finns ---------- */
+function init() {
+  /* 1. Hämta element */
+  const descInput  = document.getElementById("desc");
+  const amountInput= document.getElementById("amount");
+  const incomeBtn  = document.getElementById("incomeBtn");
+  const expenseBtn = document.getElementById("expenseBtn");
+  const incomeList = document.getElementById("incomeList");
+  const expenseList= document.getElementById("expenseList");
+  const balanceEl  = document.getElementById("balance");
 
-  // Validering: beskrivning måste fyllas och belopp vara ett positivt tal
-  if (!description || isNaN(amount) || amount <= 0) {
-    return;
+  /* Skydd om testmiljön inte satt upp DOM korrekt */
+  if (!descInput || !amountInput || !incomeBtn || !expenseBtn ||
+      !incomeList || !expenseList || !balanceEl) return;
+
+  /* 2. Lägg till transaktion */
+  function addTransaction(type) {
+    const description = descInput.value.trim();
+    const amount      = Number(amountInput.value);
+
+    /* Grundvalidering */
+    if (!description || isNaN(amount) || amount <= 0) return;
+
+    const obj = { description, amount };
+    (type === "income" ? incomes : expenses).push(obj);
+
+    renderLists();
+    updateBalance();
+
+    descInput.value = "";
+    amountInput.value = "";
   }
 
-  const transaction = { description, amount, type };
-  transactions.push(transaction);
+  /* 3. Rendera listor */
+  function renderLists() {
+    incomeList.innerHTML  = "";
+    expenseList.innerHTML = "";
 
-  if (type === "income") {
-    incomes.push(transaction);
-  } else if (type === "expense") {
-    expenses.push(transaction);
+    incomes.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = `${t.description} - ${t.amount} kr (Inkomst)`;
+      incomeList.appendChild(li);
+    });
+
+    expenses.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = `${t.description} - ${t.amount} kr (Utgift)`;
+      expenseList.appendChild(li);
+    });
   }
 
-  renderLists();
-  updateBalance();
+  /* 4. Uppdatera saldo */
+  function updateBalance() {
+    const total =
+      incomes .reduce((s, t) => s + t.amount, 0) -
+      expenses.reduce((s, t) => s + t.amount, 0);
 
-  // Rensa inputfält
-  descInput.value = "";
-  amountInput.value = "";
+    balanceEl.textContent = total;
+  }
+
+  /* 5. Eventlyssnare */
+  incomeBtn .addEventListener("click", () => addTransaction("income"));
+  expenseBtn.addEventListener("click", () => addTransaction("expense"));
 }
 
-// Rendera alla listor
-function renderLists() {
-  // Lista för inkomster
-  incomeList.innerHTML = "";
-  incomes.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = `${item.description}: ${item.amount} kr`;
-    incomeList.appendChild(li);
-  });
-
-  // Lista för utgifter
-  expenseList.innerHTML = "";
-  expenses.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = `${item.description}: ${item.amount} kr`;
-    expenseList.appendChild(li);
-  });
-
-  // Lista för alla transaktioner
-  transactionList.innerHTML = "";
-  transactions.forEach(item => {
-    const li = document.createElement("li");
-    const sign = item.type === "income" ? "+" : "-";
-    li.textContent = `${item.description}: ${sign}${item.amount} kr`;
-    transactionList.appendChild(li);
-  });
+/* ----- Starta init beroende på readyState ----- */
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();                         // JSDOM / redan laddad
 }
 
-// Uppdatera och visa saldo
-function updateBalance() {
-  let total = 0;
-  incomes.forEach(item => total += item.amount);
-  expenses.forEach(item => total -= item.amount);
-  balanceSpan.textContent = total;
-}
-
-// Eventlyssnare för knapparna
-incomeBtn.addEventListener("click", () => addTransaction("income"));
-expenseBtn.addEventListener("click", () => addTransaction("expense"));
-
-// Export för tester (om testverktyg körs i Node)
+/* ----- Export för Jest/Node (valfritt) ----- */
 if (typeof module !== "undefined") {
-  module.exports = {
-    incomes,
-    expenses,
-    transactions,
-    addTransaction,
-    renderLists,
-    updateBalance,
-  };
+  module.exports = { incomes, expenses };
 }
