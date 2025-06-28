@@ -1,11 +1,10 @@
-// Hämta HTML-element
 const descInput = document.getElementById("desc");
 const amountInput = document.getElementById("amount");
 const incomeBtn = document.getElementById("incomeBtn");
 const expenseBtn = document.getElementById("expenseBtn");
-const incomeList = document.getElementById("incomeList");
-const expenseList = document.getElementById("expenseList");
-const transactionList = document.getElementById("transactionList");
+const incomeList = document.getElementById("incomelist");
+const expenseList = document.getElementById("expenselist");
+const transactionList = document.getElementById("transactionlist");
 const balanceSpan = document.getElementById("balance");
 
 // Arrayer för inkomster, utgifter och alla transaktioner
@@ -29,6 +28,7 @@ function addTransaction(type) {
 
   // Lägg till i respektive lista
   transactions.push(transaction);
+
   if (type === "income") {
     incomes.push(transaction);
   } else {
@@ -48,7 +48,7 @@ function addTransaction(type) {
 function renderLists() {
   // Lista för inkomster
   incomeList.innerHTML = "";
-  incomes.forEach(item => {
+  incomes.forEach((item) => {
     const li = document.createElement("li");
     li.textContent = `${item.description}: ${item.amount} kr`;
     incomeList.appendChild(li);
@@ -56,7 +56,7 @@ function renderLists() {
 
   // Lista för utgifter
   expenseList.innerHTML = "";
-  expenses.forEach(item => {
+  expenses.forEach((item) => {
     const li = document.createElement("li");
     li.textContent = `${item.description}: ${item.amount} kr`;
     expenseList.appendChild(li);
@@ -64,7 +64,7 @@ function renderLists() {
 
   // Alla transaktioner (i tidsordning)
   transactionList.innerHTML = "";
-  transactions.forEach(item => {
+  transactions.forEach((item) => {
     const li = document.createElement("li");
     const sign = item.type === "income" ? "+" : "-";
     li.textContent = `${item.description}: ${sign}${item.amount} kr`;
@@ -75,8 +75,8 @@ function renderLists() {
 // Uppdatera och visa saldo
 function updateBalance() {
   let total = 0;
-  incomes.forEach(item => total += item.amount);
-  expenses.forEach(item => total -= item.amount);
+  incomes.forEach((item) => (total += item.amount));
+  expenses.forEach((item) => (total -= item.amount));
   balanceSpan.textContent = total;
 }
 
@@ -84,7 +84,7 @@ function updateBalance() {
 incomeBtn.addEventListener("click", () => addTransaction("income"));
 expenseBtn.addEventListener("click", () => addTransaction("expense"));
 
-// Export för tester (om test ramverket kör `node`)
+// Export för tester (om testramverket kör `node`)
 if (typeof module !== "undefined") {
   module.exports = {
     incomes,
