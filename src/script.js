@@ -1,3 +1,4 @@
+// Hämta HTML-element
 const descInput = document.getElementById("desc");
 const amountInput = document.getElementById("amount");
 const incomeBtn = document.getElementById("incomeBtn");
@@ -7,28 +8,26 @@ const expenseList = document.getElementById("expenselist");
 const transactionList = document.getElementById("transactionlist");
 const balanceSpan = document.getElementById("balance");
 
-// Arrayer för inkomster, utgifter och alla transaktioner
-let incomes = [];
-let expenses = [];
-let transactions = [];
+// Arrayer för inkomster, utgifter och transaktioner
+const incomes = [];
+const expenses = [];
+const transactions = [];
 
-// Lägg till en transaktion (inkomst eller utgift)
+// Lägg till en transaktion
 function addTransaction(type) {
   const description = descInput.value.trim();
   const amount = Number(amountInput.value);
 
-  // Inputvalidering – förhindra tomma eller ogiltiga värden
+  // Inputvalidering
   if (!description || isNaN(amount) || amount <= 0) {
-    // alert("Fyll i både beskrivning och ett giltigt belopp!");
     return;
   }
 
   // Skapa transaktionsobjekt
   const transaction = { description, amount, type };
 
-  // Lägg till i respektive lista
+  // Lägg till i respektive listor
   transactions.push(transaction);
-
   if (type === "income") {
     incomes.push(transaction);
   } else {
@@ -39,7 +38,7 @@ function addTransaction(type) {
   renderLists();
   updateBalance();
 
-  // Rensa inputfälten
+  // Rensa inputfält
   descInput.value = "";
   amountInput.value = "";
 }
@@ -84,7 +83,7 @@ function updateBalance() {
 incomeBtn.addEventListener("click", () => addTransaction("income"));
 expenseBtn.addEventListener("click", () => addTransaction("expense"));
 
-// Export för tester (om testramverket kör `node`)
+// Export för tester (om testramverket kör node)
 if (typeof module !== "undefined") {
   module.exports = {
     incomes,
