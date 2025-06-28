@@ -15,74 +15,81 @@ let transactions = [];
 
 // Lägg till en transaktion (inkomst eller utgift)
 function addTransaction(type) {
-    const description = descInput.value.trim();
-    const amount = Number(amountInput.value);
+  const description = descInput.value.trim();
+  const amount = Number(amountInput.value);
 
-    // Inputvalidering – förhindra tomma eller ogiltiga värden
-    if (!description || isNaN(amount) || amount <= 0) {
-        // Om du vill visa ett felmeddelande, byt ut return mot t.ex:
-        // alert("Fyll i både beskrivning och ett giltigt belopp!");
-        return;
-    }
+  // Inputvalidering – förhindra tomma eller ogiltiga värden
+  if (!description || isNaN(amount) || amount <= 0) {
+    // alert("Fyll i både beskrivning och ett giltigt belopp!");
+    return;
+  }
 
-    const transaction = {
-        description,
-        amount,
-        type // "income" eller "expense"
-    };
+  const transaction = { description, amount, type };
 
-    transactions.push(transaction);
+  transactions.push(transaction);
 
-    if (type === "income") {
-        incomes.push(transaction);
-    } else {
-        expenses.push(transaction);
-    }
+  if (type === "income") {
+    incomes.push(transaction);
+  } else {
+    expenses.push(transaction);
+  }
 
-    renderLists();
-    updateBalance();
+  renderLists();
+  updateBalance();
 
-    // Rensa inputfälten
-    descInput.value = "";
-    amountInput.value = "";
+  // Rensa inputfälten
+  descInput.value = "";
+  amountInput.value = "";
 }
 
-// Rendera inkomster, utgifter och alla transaktioner
+// Visa inkomster, utgifter och alla transaktioner i varsitt lista
 function renderLists() {
-    // Lista för inkomster
-    incomeList.innerHTML = "";
-    incomes.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `${item.description}: +${item.amount} kr`;
-        incomeList.appendChild(li);
-    });
+  // Lista för inkomster
+  incomeList.innerHTML = "";
+  incomes.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.description}: ${item.amount} kr`;
+    incomeList.appendChild(li);
+  });
 
-    // Lista för utgifter
-    expenseList.innerHTML = "";
-    expenses.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `${item.description}: -${item.amount} kr`;
-        expenseList.appendChild(li);
-    });
+  // Lista för utgifter
+  expenseList.innerHTML = "";
+  expenses.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.description}: -${item.amount} kr`;
+    expenseList.appendChild(li);
+  });
 
-    // Alla transaktioner (i tidsordning)
-    transactionList.innerHTML = "";
-    transactions.forEach(item => {
-        const li = document.createElement("li");
-        const sign = item.type === "income" ? "+" : "-";
-        li.textContent = `${item.description}: ${sign}${item.amount} kr`;
-        transactionList.appendChild(li);
-    });
+  // Alla transaktioner (i tidsordning)
+  transactionList.innerHTML = "";
+  transactions.forEach(item => {
+    const li = document.createElement("li");
+    const sign = item.type === "income" ? "+" : "-";
+    li.textContent = `${item.description}: ${sign}${item.amount} kr`;
+    transactionList.appendChild(li);
+  });
 }
 
 // Uppdatera och visa saldo
 function updateBalance() {
-    let total = 0;
-    incomes.forEach(item => total += item.amount);
-    expenses.forEach(item => total -= item.amount);
-    balanceSpan.textContent = total;
+  let total = 0;
+  incomes.forEach(item => total += item.amount);
+  expenses.forEach(item => total -= item.amount);
+  balanceSpan.textContent = total;
 }
 
 // Eventlyssnare för knapparna
 incomeBtn.addEventListener("click", () => addTransaction("income"));
 expenseBtn.addEventListener("click", () => addTransaction("expense"));
+
+// Export för tester (om testramverket kör `node`)
+if (typeof module !== "undefined") {
+  module.exports = {
+    incomes,
+    expenses,
+    transactions,
+    addTransaction,
+    updateBalance,
+    renderLists
+  };
+}
