@@ -1,4 +1,4 @@
-// Hämta alla HTML-element
+// Hämta HTML-element
 const descInput = document.getElementById("desc");
 const amountInput = document.getElementById("amount");
 const incomeBtn = document.getElementById("incomeBtn");
@@ -18,9 +18,11 @@ function addTransaction(type) {
     const description = descInput.value.trim();
     const amount = Number(amountInput.value);
 
-    // Validera inmatning
+    // Inputvalidering – förhindra tomma eller ogiltiga värden
     if (!description || isNaN(amount) || amount <= 0) {
-        return; // Kan lägga till alert här om du vill
+        // Om du vill visa ett felmeddelande, byt ut return mot t.ex:
+        // alert("Fyll i både beskrivning och ett giltigt belopp!");
+        return;
     }
 
     const transaction = {
@@ -40,14 +42,14 @@ function addTransaction(type) {
     renderLists();
     updateBalance();
 
-    // Rensa fälten
+    // Rensa inputfälten
     descInput.value = "";
     amountInput.value = "";
 }
 
-// Visa inkomster, utgifter och alla transaktioner i varsin lista
+// Rendera inkomster, utgifter och alla transaktioner
 function renderLists() {
-    // Inkomster
+    // Lista för inkomster
     incomeList.innerHTML = "";
     incomes.forEach(item => {
         const li = document.createElement("li");
@@ -55,7 +57,7 @@ function renderLists() {
         incomeList.appendChild(li);
     });
 
-    // Utgifter
+    // Lista för utgifter
     expenseList.innerHTML = "";
     expenses.forEach(item => {
         const li = document.createElement("li");
@@ -63,7 +65,7 @@ function renderLists() {
         expenseList.appendChild(li);
     });
 
-    // Alla transaktioner
+    // Alla transaktioner (i tidsordning)
     transactionList.innerHTML = "";
     transactions.forEach(item => {
         const li = document.createElement("li");
@@ -73,7 +75,7 @@ function renderLists() {
     });
 }
 
-// Uppdatera saldo
+// Uppdatera och visa saldo
 function updateBalance() {
     let total = 0;
     incomes.forEach(item => total += item.amount);
@@ -81,6 +83,6 @@ function updateBalance() {
     balanceSpan.textContent = total;
 }
 
-// Eventlisteners för knapparna
+// Eventlyssnare för knapparna
 incomeBtn.addEventListener("click", () => addTransaction("income"));
 expenseBtn.addEventListener("click", () => addTransaction("expense"));
